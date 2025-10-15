@@ -1,3 +1,4 @@
+import bcrypt from "bcryptjs";
 import { IUser, User } from "./UserModel";
 
 // Alle Benutzer: Aus Vorlage Rest-Server
@@ -8,18 +9,20 @@ export async function getAll(): Promise<IUser[]> {
 
 // Finde Benutzer anhand seiner ID
 export async function getPublicUserById(userID: string) {
-    const user = await User.findOne( {userID} );
+    const user = await User.findOne({ userID });
     return user;
 }
 
 // Erstelle Benutzer
 export async function createUser(userData: any) {
-    // Was passiert, wenn ein zweiter User mit der gleichen User-ID angelegt wird?
-    // Was passiert, wenn ein User angelegt werden soll, der keine User-ID hat?
-    if (userData) {
+    if (!userData) {
+        console.log("Keine Benutzerdaten vorhanden");
+    }
+    else {
+        const hashedPassword = await bcrypt.hash(userData.password,10)
         const user = new User({
         userID: userData.userID,
-        password: userData.password,
+        password: hashedPassword,
         firstName: userData.firstName,
         lastName: userData.lastName,
         isAdministrator: userData.isAdministrator
@@ -27,19 +30,18 @@ export async function createUser(userData: any) {
         await user.save();
         return user.toJSON();
     }
-    else {
-        console.log("Keine Benutzerdaten vorhanden");
-    }
 }
 
 // Benutzer Aktualisieren
 export async function updatePublicUser(userID: string, updatedUser: any) {
-    // Was passiert, wenn ein User geändert werden soll, den es nicht gibt?
-    return User.findOneAndUpdate( {userID} );
+    // Prüft, ob ein neues Passwort übergeben wurde und hasht es, bevor es geändert wird
+    if(updatedUser.password){
+    updatedUser.password = await bcrypt.hash(updatedUser.password, 10)
+    }
+    return User.findOneAndUpdate ( { userID }, updatedUser, {new: true});
 }
 
 // Benutzer löschen
 export async function deleteUser(userID: string) {
-    // Was passiert, wenn ein User gelöscht werden soll, den es nicht gibt?
-    return User.findOneAndDelete( {userID} );
+    return User.findOneAndDelete({ userID });
 }

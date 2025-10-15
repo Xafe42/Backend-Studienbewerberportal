@@ -11,6 +11,7 @@ const app = express();
 // Port für HTTP laden
 const port = process.env.PORT;
 
+// Wandelt JSON-Daten aus Requests in nutzbares JavaScript-Objekt um
 app.use(bodyParser.json())
 
 startDB();

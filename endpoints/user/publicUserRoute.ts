@@ -22,9 +22,8 @@ router.get('/:userID', async (req: any, res: any) => {
         res.status(200).json(user);
     }
     else
-        res.status(404).json({ error: "Benutzer nicht gefunden" })
+        return res.status(404).json({ error: "Benutzer nicht gefunden" })
     }
-
     catch(error) {
         res.status(500).json({ error: 'Serverfehler' })
     }
@@ -43,9 +42,11 @@ router.post('/', async (req: any, res: any) => {
     if (existUser){
         return res.status(400).json({ error: "Benutzer mit ID schon vorhanden" })
     }
-    // Gebe den Benutzer im Body zurück
-    const user = await createUser(req.body);
-    res.status(201).json(user);
+    
+    // Erstellt den Benutzer
+    console.log('Erstelle Benutzer:' + JSON.stringify(req.body))
+    const createdUser = await createUser(req.body);
+    res.status(201).json(createdUser);
     }
     catch(error) {
         res.status(500).json({ error: "Serverfehler" })
@@ -58,7 +59,7 @@ router.put('/:userID', async (req: any, res: any) => {
         const updatedUser = await updatePublicUser(req.params.userID, req.body);
         // Was passiert, wenn ein User geändert werden soll, den es nicht gibt?
         if (!updatedUser) {
-            res.status(404).json({ error: "Benutzer wurde nicht gefunden" })
+            return res.status(404).json({ error: "Benutzer wurde nicht gefunden" })
         }
         res.status(200).json(updatedUser)
     }
