@@ -38,10 +38,12 @@ export async function updatePublicUser(userID: string, updatedUser: any) {
     if(updatedUser.password){
     updatedUser.password = await bcrypt.hash(updatedUser.password, 10)
     }
+    console.log("Benutzer " +userID+ " wurde aktualisiert");
     return User.findOneAndUpdate ( { userID }, updatedUser, {new: true});
 }
 
 // Benutzer löschen
 export async function deleteUser(userID: string) {
+    console.log("Benutzer wurde gelöscht");
     return User.findOneAndDelete({ userID });
 }

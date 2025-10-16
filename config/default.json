@@ -1,0 +1,12 @@
+{
+"db": {
+    "dbURL": "mongodb://127.0.0.1:27017/WE2",
+    "connectionOptions": {
+    "useNewUrlParser": true,
+    "useUnifiedTopology": true
+    }
+},
+"server": {
+    "httpPort": 80
+}
+}

@@ -59,7 +59,7 @@ router.put('/:userID', async (req: any, res: any) => {
         const updatedUser = await updatePublicUser(req.params.userID, req.body);
         // Was passiert, wenn ein User geändert werden soll, den es nicht gibt?
         if (!updatedUser) {
-            return res.status(404).json({ error: "Benutzer wurde nicht gefunden" })
+            return res.status(404).json({ error: "Benutzer mit ID " + req.params.userID + " wurde nicht gefunden" })
         }
         res.status(200).json(updatedUser)
     }
@@ -74,7 +74,7 @@ router.delete('/:userID', async (req: any, res: any) => {
         const deleted = await deleteUser(req.params.userID)
         // Was passiert, wenn ein User gelöscht werden soll, den es nicht gibt?
         if(!deleted) {
-            return res.status(404).json( {error: "Benutzer nicht gefunden"} );
+            return res.status(404).json( {error: "Benutzer mit der ID " + req.params.userID + " wurde nicht gefunden"} );
         }
         res.status(204).send();
     }

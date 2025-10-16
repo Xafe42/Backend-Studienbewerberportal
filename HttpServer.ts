@@ -1,15 +1,13 @@
 import bodyParser from 'body-parser';
-import dotenv from 'dotenv';
+import config from 'config';
 import express from 'express';
 import { startDB } from './db/Database';
 import publicUserRouter from './endpoints/user/publicUserRoute';
 
-dotenv.config();
-
 const app = express();
 
 // Port für HTTP laden
-const port = process.env.PORT;
+const port = config.get('server.httpPort');
 
 // Wandelt JSON-Daten aus Requests in nutzbares JavaScript-Objekt um
 app.use(bodyParser.json())
