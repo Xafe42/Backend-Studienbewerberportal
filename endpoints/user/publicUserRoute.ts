@@ -22,7 +22,7 @@ router.get('/:userID', async (req: any, res: any) => {
         res.status(200).json(user);
     }
     else
-        return res.status(404).json({ error: "Benutzer nicht gefunden" })
+        return res.status(404).json({ error: "Benutzer mit User-ID " + req.params.userID + " nicht gefunden" })
     }
     catch(error) {
         res.status(500).json({ error: 'Serverfehler' })
