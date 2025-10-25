@@ -4,7 +4,7 @@
   "description": "",
   "main": "HttpServer.ts",
   "scripts": {
-    "start": "nodemon ./HttpServer.ts",
+    "start": "tsc && nodemon ./HttpServer.ts",
     "startdev": "nodemon --inspect ./HttpServer.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
