@@ -1,7 +1,7 @@
 import bodyParser from 'body-parser';
 import config from 'config';
 import express from 'express';
-import { startDB } from './db/Database';
+import { startDB } from './database/Database';
 import publicUserRouter from './endpoints/user/publicUserRoute';
 
 const app = express();
