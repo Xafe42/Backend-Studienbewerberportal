@@ -4,8 +4,8 @@
   "description": "",
   "main": "HttpServer.ts",
   "scripts": {
-    "start": "nodemon ./HttpServer.ts",
-    "startdev": "nodemon --inspect ./HttpServer.ts",
+    "start": "ts-node ./HttpServer.ts",
+    "startdev": "nodemon --exec ts-node ./HttpServer.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
