@@ -2,6 +2,7 @@ import bodyParser from 'body-parser';
 import config from 'config';
 import express from 'express';
 import { startDB } from './database/Database';
+import { adminUserExist } from './endpoints/authenticate/AuthenticationService';
 import publicUserRouter from './endpoints/user/publicUserRoute';
 
 const app = express();
@@ -16,12 +17,22 @@ startDB();
 
 // HTTP Server starten
 app.listen(port, async () => {
+    await adminUserExist();
     console.log(`[server]: HTTP-Server läuft auf http://localhost:${port}`);
 });
 
 // Meilenstein 1
 // Endpoint: publicUsers
 app.use('/api/publicUsers', publicUserRouter);
+
+// Meilenstein 2
+// Endpoint: Authentifizierung
+app.use('/api/authenticate', publicUserRouter);
+
+// Endpoint: Users
+app.use('/api/users', publicUserRouter);
+
+// Endpoint: DegreeCourse
 
 // Antwort wenn Route nicht vorhanden
 app.use((req, res) => {
