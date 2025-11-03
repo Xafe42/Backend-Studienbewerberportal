@@ -5,6 +5,7 @@ import { startDB } from './database/Database';
 import authenticationRouter from './endpoints/authenticate/AuthenticationRoute';
 import { AuthenticationService } from './endpoints/authenticate/AuthenticationService';
 import publicUserRouter from './endpoints/user/publicUserRoute';
+import userRouter from './endpoints/user/UserRoute';
 
 const app = express();
 
@@ -31,7 +32,7 @@ app.use('/api/publicUsers', publicUserRouter);
 app.use('/api/authenticate', authenticationRouter);
 
 // Endpoint: Users
-app.use('/api/users', publicUserRouter);
+app.use('/api/users', userRouter);
 
 // Endpoint: DegreeCourse
 

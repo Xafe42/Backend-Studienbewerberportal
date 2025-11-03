@@ -39,6 +39,8 @@ public static createToken(user: any) {
     );
 }
 
+// Refresh Token fehlt noch
+
 // Sicherstellen dass ein Admin existiert (Standard)
 public static async adminUserExist() {
     const admin = await User.findOne({ userID: 'admin' });

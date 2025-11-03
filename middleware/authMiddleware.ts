@@ -1,38 +1,34 @@
-/*
+import jwt from 'jsonwebtoken';
 
-// Verifizieren von Token 
+const SECRET_KEY = process.env.JWT_SECRET || 'geheimerSchlüssel';
 
-// Retrieve the token from the header or as a cookie
-…
-// If there is a token, verify it the with secret key
-try {
-var payload = jwt.verify(token, jwtKey)
-} catch (e) {
-// if the token is wrong, an exception is thrown
-if (e instanceof jwt.JsonWebTokenError) {
-// Not logged in, redirect to error page
-}
-// Do the action the user requested
-…
+// Verifizieren von Token // Aus alter Abgabe
+// Middleware zur Authentifikation des Token
+export const authenticateJWT = (req: any, res: any, next: any) => {
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/split
+    const token = req.headers.authorization && req.headers.authorization.split(' ')[1];
 
-// Token Erneuern
+    // Kein Token vorhanden
+    if (!token) {
+        return res.status(401).json({ error: 'Token fehlt oder ist ungültig' });
+    }
 
-var payload
-try {
-payload = jwt.verify(token, jwtKey)
-} catch (e) {
-if (e instanceof jwt.JsonWebTokenError) {
-return res.status(401).end()
-}
-return res.status(400).end()
-}
-const nowUnixSeconds = Math.round(Number(new Date()) / 1000)
-if (payload.exp - nowUnixSeconds > 30) {
-return res.status(400).end()
-}
-const newToken = jwt.sign({ username: payload.username }, jwtKey, {
-algorithm: 'HS256',
-expiresIn: jwtExpirySeconds
-})
+    // Überprüft Token mit Geheimschlüssel
+    jwt.verify(token, SECRET_KEY, (err: any, user: any) => {
+        if (err) {
+            return res.status(403).json({ error: 'Token ist ungültig oder abgelaufen' });
+        }
+        req.user = user;
+        next();
+    });
+};
 
-*/
+// Middleware zur Authentifikation des Administrator
+export const authorizeAdmin = (req: any, res: any, next: any) => {
+    if (!req.user.isAdministrator) {
+        return res.status(403).json({ error: 'Keine Berechtigung für Admin-Operationen' });
+    }
+    // Wenn Benutzer Admin ist gehe zur nächsten Middleware
+    next();
+};
+
