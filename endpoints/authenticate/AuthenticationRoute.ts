@@ -24,17 +24,20 @@ router.get('/', async (req: any, res: any) => {
     }
 
     // Erstelle den JWT Token
-    const jwtToken = AuthenticationService.createToken(user);
+    const accessToken = AuthenticationService.createToken(user);
+    const refreshToken = AuthenticationService.createRefreshToken(user);
+
 
     // Token im Header setzen
-    res.setHeader('Authorization', 'Bearer ' + jwtToken);
+    res.setHeader('Authorization', 'Bearer ' + accessToken);
 
     return res.status(200).json({
         success: 'Token created successfully',
         firstName: user.firstName,
         lastName: user.lastName,
         isAdministrator: user.isAdministrator,
-        token: jwtToken
+        token: accessToken,
+        refreshToken: refreshToken
     })
     }
     catch(error) {

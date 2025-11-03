@@ -25,6 +25,7 @@ public static async authenticate(userID: string, password: string) {
 
 
 // Erstelle einen Token
+// https://www.base64decode.org/
 public static createToken(user: any) {
     // JWT Payload erstellen
         return jwt.sign(
@@ -39,7 +40,17 @@ public static createToken(user: any) {
     );
 }
 
-// Refresh Token fehlt noch
+// Refresh Token erstellen
+public static createRefreshToken(user: any) {
+    return jwt.sign(
+        {
+            userID: user.userID,
+        },
+        SECRET_KEY,
+        // Ablaufdauer
+        { expiresIn: '7d' }
+    );
+}
 
 // Sicherstellen dass ein Admin existiert (Standard)
 public static async adminUserExist() {

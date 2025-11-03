@@ -4,6 +4,7 @@ import express from 'express';
 import { startDB } from './database/Database';
 import authenticationRouter from './endpoints/authenticate/AuthenticationRoute';
 import { AuthenticationService } from './endpoints/authenticate/AuthenticationService';
+import degreeCourseRouter from './endpoints/degreeCourses/DegreeCourseRoute';
 import publicUserRouter from './endpoints/user/publicUserRoute';
 import userRouter from './endpoints/user/UserRoute';
 
@@ -35,6 +36,7 @@ app.use('/api/authenticate', authenticationRouter);
 app.use('/api/users', userRouter);
 
 // Endpoint: DegreeCourse
+app.use('/api/degreeCourses', degreeCourseRouter);
 
 // Antwort wenn Route nicht vorhanden
 app.use((req, res) => {
