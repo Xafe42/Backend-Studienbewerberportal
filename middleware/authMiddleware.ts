@@ -1,3 +1,5 @@
+/*
+
 // Verifizieren von Token 
 
 // Retrieve the token from the header or as a cookie
@@ -32,3 +34,5 @@ const newToken = jwt.sign({ username: payload.username }, jwtKey, {
 algorithm: 'HS256',
 expiresIn: jwtExpirySeconds
 })
+
+*/

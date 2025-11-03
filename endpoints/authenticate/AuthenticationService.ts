@@ -6,8 +6,9 @@ import { User } from '../user/UserModel';
 const SECRET_KEY = process.env.JWT_SECRET || 'geheimerSchlüssel';
 const EXPIRY_TIME = '1h';
 
+export class AuthenticationService {
 // Prüfe ID und Passwort
-export async function authenticate(userID: string, password: string) {
+public static async authenticate(userID: string, password: string) {
     const user = await User.findOne({ userID });
     if (!user) {
         return null;
@@ -24,9 +25,9 @@ export async function authenticate(userID: string, password: string) {
 
 
 // Erstelle einen Token
-export async function createToken(user: any) {
+public static createToken(user: any) {
     // JWT Payload erstellen
-        jwt.sign(
+        return jwt.sign(
         {
             userID: user.userID,
             isAdministrator: user.isAdministrator
@@ -39,7 +40,7 @@ export async function createToken(user: any) {
 }
 
 // Sicherstellen dass ein Admin existiert (Standard)
-export async function adminUserExist() {
+public static async adminUserExist() {
     const admin = await User.findOne({ userID: 'admin' });
     if (!admin) {
         // Gehashtes Password für Admin mit 10 Salts
@@ -54,3 +55,4 @@ export async function adminUserExist() {
                 await user.save();
     }
 };
+}
