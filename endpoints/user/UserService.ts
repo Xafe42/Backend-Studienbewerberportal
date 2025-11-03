@@ -1,6 +1,8 @@
 import bcrypt from "bcryptjs";
 import { IUser, User } from "./UserModel";
 
+// Funktionen für den Endpoint Public User
+
 // Alle Benutzer: Aus Vorlage Rest-Server
 export async function getAll(): Promise<IUser[]> {
     const allUsers: IUser[] = await User.find();
@@ -8,6 +10,7 @@ export async function getAll(): Promise<IUser[]> {
 }
 
 // Finde Benutzer anhand seiner ID
+// https://www.mongodb.com/docs/manual/reference/method/db.collection.findOne/
 export async function getPublicUserById(userID: string) {
     const user = await User.findOne({ userID });
     return user;
@@ -46,4 +49,41 @@ export async function updatePublicUser(userID: string, updatedUser: any) {
 export async function deleteUser(userID: string) {
     console.log("Benutzer wurde gelöscht");
     return User.findOneAndDelete({ userID });
+}
+
+// Funktionen für den Endpoint User
+// Abrufen aller Benutzer
+export async function getAllUsers(): Promise<IUser[]> {
+    return await User.find().select('-password');
+}
+
+
+// Finde Benutzer anhand seiner ID
+// https://mongoosejs.com/docs/api/query.html#Query.prototype.select()
+export async function getUserById(userID: string) {
+    const user = await User.findOne({ userID }).select('-password');
+    return user;
+}
+
+// Benutzer Aktualisieren - Muss noch überarbeitet werden
+export async function updateUser(userID: string, updatedUser: any, isAdmin: boolean) {
+    // UserID ist unveränderbar
+    if (updatedUser.userID) {
+        delete updatedUser.userID;
+    }
+
+    // Prüft, ob ein neues Passwort übergeben wurde und hasht es, bevor es geändert wird
+    // Passwort verschlüsseln
+    // https://github.com/kelektiv/node.bcrypt.js#usage
+    if(updatedUser.password){
+    updatedUser.password = await bcrypt.hash(updatedUser.password, 10)
+    }
+
+    // Normale User dürfen nur bestimmte Felder ändern
+    if(updatedUser.isAdmin){
+        delete updatedUser.isAdministrator;
+    }
+
+    console.log("Benutzer " +userID+ " wurde aktualisiert");
+    return User.findOneAndUpdate ( { userID }, updatedUser, {new: true}).select('-password');
 }

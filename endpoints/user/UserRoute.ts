@@ -1,13 +1,13 @@
 import express from "express";
-import { authorizeAdmin } from "../../middleware/authMiddleware";
-import { createUser, deleteUser, getAll, getPublicUserById, updatePublicUser } from "./UserService";
+import { authenticateJWT, authorizeAdmin } from "../../middleware/authMiddleware";
+import { createUser, deleteUser, getAllUsers, getPublicUserById, getUserById, updateUser } from "./UserService";
 
 const router = express.Router();
 
 // Alle Benutzer abrufen
-router.get('/', authorizeAdmin, async (req: any, res: any) => {
+router.get('/',authenticateJWT, authorizeAdmin, async (req: any, res: any) => {
     try {
-    const usersList = await getAll();
+    const usersList = await getAllUsers();
     res.status(200).json(usersList);
     }
     catch(error) {
@@ -16,9 +16,9 @@ router.get('/', authorizeAdmin, async (req: any, res: any) => {
 })
 
 // Bestimmten Benutzer über ID abrufen
-router.get('/:userID', async (req: any, res: any) => {
+router.get('/:userID', authenticateJWT, async (req: any, res: any) => {
     try {
-    const user = await getPublicUserById(req.params.userID);
+    const user = await getUserById(req.params.userID);
     if (user) {
         res.status(200).json(user);
     }
@@ -31,7 +31,7 @@ router.get('/:userID', async (req: any, res: any) => {
 })
 
 // Benutzer anlegen
-router.post('/', async (req: any, res: any) => {
+router.post('/',authenticateJWT, authorizeAdmin, async (req: any, res: any) => {
     try {
     // Was passiert, wenn ein User angelegt werden soll, der keine User-ID hat?
     const userID = req.body.userID
@@ -55,9 +55,9 @@ router.post('/', async (req: any, res: any) => {
 })
 
 // Benutzerdaten ändern
-router.put('/:userID', async (req: any, res: any) => {
+router.put('/:userID',authenticateJWT, async (req: any, res: any) => {
     try {
-        const updatedUser = await updatePublicUser(req.params.userID, req.body);
+        const updatedUser = await updateUser(req.params.userID, req.body, req.body.isAdministrator);
         // Was passiert, wenn ein User geändert werden soll, den es nicht gibt?
         if (!updatedUser) {
             return res.status(404).json({ error: "Benutzer mit ID " + req.params.userID + " wurde nicht gefunden" })
@@ -70,7 +70,7 @@ router.put('/:userID', async (req: any, res: any) => {
 })
 
 // Benutzer löschen
-router.delete('/:userID', async (req: any, res: any) => {
+router.delete('/:userID',authenticateJWT, authorizeAdmin, async (req: any, res: any) => {
     try {
         const deleted = await deleteUser(req.params.userID)
         // Was passiert, wenn ein User gelöscht werden soll, den es nicht gibt?
