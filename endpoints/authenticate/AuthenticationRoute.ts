@@ -3,6 +3,8 @@ import { AuthenticationService } from "./AuthenticationService";
 
 const router = express.Router();
 
+// Basic HTTP authentication 
+// https://stackoverflow.com/questions/23616371/basic-http-authentication-with-node-and-express-4
 router.get('/', async (req: any, res: any) => {
     try {
     // Holt und prüft den Header aus der Anfrage

@@ -26,6 +26,7 @@ public static async authenticate(userID: string, password: string) {
 
 // Erstelle einen Token
 // https://www.base64decode.org/
+// https://www.npmjs.com/package/jsonwebtoken
 public static createToken(user: any) {
     // JWT Payload erstellen
         return jwt.sign(
@@ -36,7 +37,7 @@ public static createToken(user: any) {
         // Geheimschlüssel hinzufügen
         SECRET_KEY,
         // Ablaufdauer
-        { expiresIn: EXPIRY_TIME }
+        { expiresIn: EXPIRY_TIME, algorithm: 'HS256' }
     );
 }
 
@@ -57,7 +58,7 @@ public static async adminUserExist() {
     const admin = await User.findOne({ userID: 'admin' });
     if (!admin) {
         // Gehashtes Password für Admin mit 10 Salts
-        const hashedPassword = await bcrypt.hash('123', 10)
+        const hashedPassword = await bcrypt.hash('123', 10);
                 const user = new User({
                 userID: 'admin',
                 password: hashedPassword,

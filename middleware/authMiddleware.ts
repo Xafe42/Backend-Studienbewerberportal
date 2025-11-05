@@ -14,6 +14,7 @@ export const authenticateJWT = (req: any, res: any, next: any) => {
     }
 
     // Überprüft Token mit Geheimschlüssel
+    // https://www.npmjs.com/package/jsonwebtoken
     jwt.verify(token, SECRET_KEY, (err: any, user: any) => {
         if (err) {
             return res.status(403).json({ error: 'Token ist ungültig oder abgelaufen' });
