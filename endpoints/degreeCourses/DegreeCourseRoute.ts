@@ -1,14 +1,23 @@
 import express from "express";
 import { authenticateJWT, authorizeAdmin } from "../../middleware/authMiddleware";
+import { DegreeCourse } from "./DegreeCourseModel";
 import { createCourse, deleteCourse, getAllCourses, getCourseById, updateCourse } from "./DegreeCourseService";
 
 const router = express.Router();
 
 
-// Alle Kurse abrufen
-router.get('/',authenticateJWT, authorizeAdmin, async (req: any, res: any) => {
+// Alle Kurse abrufen oder nach bestimmten Studiengäng einer Hochschule filtern
+router.get('/',authenticateJWT, async (req: any, res: any) => {
     try {
-    const courseList = await getAllCourses();
+    //Suche mit Query nach Studiengängen ansonsten geb alle Kurse zurück
+    const universityShortName = req.query.universityShortName;
+    let courseList
+    if (universityShortName) {
+        courseList = await DegreeCourse.find({ universityShortName})
+    }
+    else {
+        courseList = await getAllCourses();
+    }
     res.status(200).json(courseList);
     }
     catch(error) {
@@ -36,8 +45,8 @@ router.post('/',authenticateJWT, authorizeAdmin, async (req: any, res: any) => {
     try {
     const courseID = req.body.id
     // Was passiert, wenn ein zweiter Kurs mit der gleichen ID angelegt wird?
-    const existUser = await getCourseById(courseID);
-    if (existUser){
+    const existCourse = await getCourseById(courseID);
+    if (existCourse){
         return res.status(400).json({ error: "Kurs mit ID schon vorhanden" })
     }
     
@@ -52,10 +61,10 @@ router.post('/',authenticateJWT, authorizeAdmin, async (req: any, res: any) => {
 })
 
 // Kursdaten ändern
-router.put('/:courseID',authenticateJWT, async (req: any, res: any) => {
+router.put('/:courseID',authenticateJWT, authorizeAdmin, async (req: any, res: any) => {
     try {
         const updatedCourse = await updateCourse(req.params.courseID, req.body);
-        // Was passiert, wenn ein User geändert werden soll, den es nicht gibt?
+        // Was passiert, wenn ein Kurs geändert werden soll, den es nicht gibt?
         if (!updatedCourse) {
             return res.status(404).json({ error: "Benutzer mit ID " + req.params.courseID + " wurde nicht gefunden" })
         }
@@ -72,7 +81,7 @@ router.delete('/:courseID',authenticateJWT, authorizeAdmin, async (req: any, res
         const deleted = await deleteCourse(req.params.courseID)
         // Was passiert, wenn ein Kurs gelöscht werden soll, den es nicht gibt?
         if(!deleted) {
-            return res.status(404).json( {error: "Kurs mit der ID " + req.params.id + " wurde nicht gefunden"} );
+            return res.status(404).json( {error: "Kurs mit der ID " + req.params.courseID + " wurde nicht gefunden"} );
         }
         res.status(204).send();
     }

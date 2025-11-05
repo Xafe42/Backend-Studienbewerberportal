@@ -1,6 +1,6 @@
 import { DegreeCourse, IDegreeCourse } from "./DegreeCourseModel";
 
-// Funktionen für den Endpoint Public User
+// Funktionen für den Endpoint DegreeCourses
 
 // Alle Kurse: Aus Vorlage Rest-Server
 export async function getAllCourses(): Promise<IDegreeCourse[]> {
