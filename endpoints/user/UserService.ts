@@ -71,6 +71,10 @@ export async function updateUser(userID: string, updatedUser: any, isAdmin: bool
     if (updatedUser.userID) {
         delete updatedUser.userID;
     }
+    // Admin Status darf nicht geändert werden
+    if (updatedUser.isAdministrator) {
+        delete updatedUser.isAdministrator;
+    }
 
     // Prüft, ob ein neues Passwort übergeben wurde und hasht es, bevor es geändert wird
     // Passwort verschlüsseln
@@ -78,12 +82,6 @@ export async function updateUser(userID: string, updatedUser: any, isAdmin: bool
     if(updatedUser.password){
     updatedUser.password = await bcrypt.hash(updatedUser.password, 10)
     }
-
-    // Normale User dürfen nur bestimmte Felder ändern
-    if(updatedUser.isAdmin){
-        delete updatedUser.isAdministrator;
-    }
-
     console.log("Benutzer " +userID+ " wurde aktualisiert");
     return User.findOneAndUpdate ( { userID }, updatedUser, {new: true}).select('-password');
 }

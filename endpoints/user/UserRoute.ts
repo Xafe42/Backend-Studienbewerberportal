@@ -18,6 +18,12 @@ router.get('/',authenticateJWT, authorizeAdmin, async (req: any, res: any) => {
 // Bestimmten Benutzer über ID abrufen
 router.get('/:userID', authenticateJWT, async (req: any, res: any) => {
     try {
+    const userID = req.params.userID;
+    // Falls Benutzer kein Admin ist gibt es einen Fehler
+    if (!req.user.isAdministrator && req.user.userID !== userID) {
+        return res.status(403).json({ error: 'Keine Berechtigung für Benutzer' });
+    }
+
     const user = await getUserById(req.params.userID);
     if (user) {
         res.status(200).json(user);
@@ -57,7 +63,7 @@ router.post('/',authenticateJWT, authorizeAdmin, async (req: any, res: any) => {
 // Benutzerdaten ändern
 router.put('/:userID',authenticateJWT, async (req: any, res: any) => {
     try {
-        const updatedUser = await updateUser(req.params.userID, req.body, req.body.isAdministrator);
+        const updatedUser = await updateUser(req.params.userID, req.body, req.user.isAdministrator);
         // Was passiert, wenn ein User geändert werden soll, den es nicht gibt?
         if (!updatedUser) {
             return res.status(404).json({ error: "Benutzer mit ID " + req.params.userID + " wurde nicht gefunden" })

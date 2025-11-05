@@ -90,6 +90,4 @@ router.delete('/:courseID',authenticateJWT, authorizeAdmin, async (req: any, res
     }
 })
 
-// Fehlt NOCH Such-Route umsetzen, um alle Studiengänge einer Hochschule abzurufen.
-
 export default router;
