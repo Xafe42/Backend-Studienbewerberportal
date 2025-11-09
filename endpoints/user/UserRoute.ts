@@ -63,6 +63,14 @@ router.post('/',authenticateJWT, authorizeAdmin, async (req: any, res: any) => {
 // Benutzerdaten ändern
 router.put('/:userID',authenticateJWT, async (req: any, res: any) => {
     try {
+        const paramsUser = req.params.userID
+        const isAdmin = req.user.isAdministrator
+        const verifiedUser  = req.user.userID
+        // Benutzer mit eigener ID können nur Änderungen am eigenen Konto durchführen
+        if(verifiedUser !== paramsUser && !isAdmin){
+            return res.status(403).json({ error: "Benutzer nicht erlaubt Änderung durchzuführen" })
+        }
+
         const updatedUser = await updateUser(req.params.userID, req.body, req.user.isAdministrator);
         // Was passiert, wenn ein User geändert werden soll, den es nicht gibt?
         if (!updatedUser) {
