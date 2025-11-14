@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 
+// Wenn keine Umgebungsvariable gesetzt ist, wird Standardwert verwendet
 const SECRET_KEY = process.env.JWT_SECRET || 'geheimerSchlüssel';
 
 // Verifizieren von Token // Aus alter Abgabe
