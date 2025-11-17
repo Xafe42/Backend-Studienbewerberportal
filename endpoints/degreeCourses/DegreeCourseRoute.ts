@@ -8,7 +8,7 @@ const router = express.Router();
 
 
 // Alle Kurse abrufen oder nach bestimmten Studiengäng einer Hochschule filtern
-router.get('/',authenticateJWT, async (req: any, res: any) => {
+router.get('/', async (req: any, res: any) => {
     try {
     //Suche mit Query nach Studiengängen ansonsten geb alle Kurse zurück
     const universityShortName = req.query.universityShortName;
@@ -27,7 +27,7 @@ router.get('/',authenticateJWT, async (req: any, res: any) => {
 })
 
 // Bestimmten Kurs über ID abrufen
-router.get('/:courseID', authenticateJWT, async (req: any, res: any) => {
+router.get('/:courseID', async (req: any, res: any) => {
     try {
     const course = await getCourseById(req.params.courseID);
     if (course) {
@@ -91,7 +91,7 @@ router.put('/:courseID',authenticateJWT, authorizeAdmin, async (req: any, res: a
     }
 })
 
-// Benutzer löschen
+// Kurs löschen
 router.delete('/:courseID',authenticateJWT, authorizeAdmin, async (req: any, res: any) => {
     try {
         const deleted = await deleteCourse(req.params.courseID)
