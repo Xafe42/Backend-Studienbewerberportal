@@ -2,17 +2,21 @@ import bodyParser from 'body-parser';
 import config from 'config';
 import cors from 'cors';
 import express from 'express';
+import fs from 'fs';
+import https from 'https';
 import { startDB } from './database/Database';
 import authenticationRouter from './endpoints/authenticate/AuthenticationRoute';
 import { AuthenticationService } from './endpoints/authenticate/AuthenticationService';
+import degreeCourseApplicationRouter from './endpoints/degreeCourseApplications/DegreeCourseApplicationRoute';
 import degreeCourseRouter from './endpoints/degreeCourses/DegreeCourseRoute';
 import publicUserRouter from './endpoints/user/publicUserRoute';
 import userRouter from './endpoints/user/UserRoute';
 
 const app = express();
 
-// Port für HTTP laden
+// Port für HTTP und HTTPS laden
 const port = config.get('server.httpPort');
+const httpsPort = config.get('server.httpsPort');
 
 // CORS legt fest welche Domains, Methoden und Header beim Zugriff erlaubt sind
 // Dadurch kann später das Front-End drauf zugreifen
@@ -28,6 +32,21 @@ methods:["GET","POST","PUT","PATCH","DELETE"]
 app.use(bodyParser.json())
 
 startDB();
+
+// HTTPS Server mit Zertifikat starten
+// Folie 58 Rest Security
+try {
+const privateKey = fs.readFileSync('./certificates/privateKey.pem');
+const caKey = fs.readFileSync('./certificates/caKey.pem');
+
+const httpsServer = https.createServer({ key: privateKey, cert: caKey }, app);
+
+httpsServer.listen(httpsPort, async () => {
+    console.log(`[server]: HTTPS-Server läuft auf https://localhost:${httpsPort}`);
+});
+} catch (error) {
+    console.error('Fehler beim Starten des HTTPS-Servers:', error);
+}
 
 // HTTP Server starten
 app.listen(port, async () => {
@@ -48,6 +67,10 @@ app.use('/api/users', userRouter);
 
 // Endpoint: DegreeCourse
 app.use('/api/degreeCourses', degreeCourseRouter);
+
+// Meilenstein 3
+// Endpoint: degreeCourseApplications:
+app.use('/api/degreeCourseApplications', degreeCourseApplicationRouter);
 
 // Antwort wenn Route nicht vorhanden
 app.use((req, res) => {

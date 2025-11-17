@@ -7,6 +7,7 @@
     }
 },
 "server": {
-    "httpPort": 80
+    "httpPort": 80,
+    "httpsPort": 443
 }
 }

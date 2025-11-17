@@ -1,5 +1,6 @@
 import express from "express";
 import { authenticateJWT, authorizeAdmin } from "../../middleware/authMiddleware";
+import { getApplicationsByDegreeCourse } from "../degreeCourseApplications/DegreeCourseApplicationService";
 import { DegreeCourse } from "./DegreeCourseModel";
 import { createCourse, deleteCourse, getAllCourses, getCourseById, updateCourse } from "./DegreeCourseService";
 
@@ -40,16 +41,31 @@ router.get('/:courseID', authenticateJWT, async (req: any, res: any) => {
     }
 })
 
+// Meilenstein 3
+// GET: Nachgelagerte Suche für Studienbewerbungen
+router.get('/:degreeCourseID/degreeCourseApplications', authenticateJWT, authorizeAdmin, async (req: any, res: any) => {
+    try {
+        const degreeCourseID = req.params.degreeCourseID;
+        const degreeCourse = await getCourseById(degreeCourseID);
+        if (!degreeCourse) {
+            return res.status(404).json({ error: 'Studiengang nicht gefunden' });
+        }
+        const applications = await getApplicationsByDegreeCourse(degreeCourseID);
+        res.status(200).json(applications);
+    } catch (error) {
+        res.status(500).json({ error: 'Serverfehler' });
+    }
+});
+
 // Kurs anlegen
 router.post('/',authenticateJWT, authorizeAdmin, async (req: any, res: any) => {
     try {
-    const courseID = req.body.id
     // Was passiert, wenn ein zweiter Kurs mit der gleichen ID angelegt wird?
-    const existCourse = await getCourseById(courseID);
-    if (existCourse){
-        return res.status(400).json({ error: "Kurs mit ID schon vorhanden" })
+    const existCourse = await DegreeCourse.findOne({ name: req.body.name, shortName: req.body.shortName });
+    if (existCourse) {
+        return res.status(400).json({ error: "Kurs existiert bereits" });
     }
-    
+
     // Erstellt den Benutzer
     console.log('Erstelle Kurs:' + JSON.stringify(req.body))
     const createdCourse = await createCourse(req.body);

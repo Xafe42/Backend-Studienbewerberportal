@@ -11,8 +11,14 @@ export async function getAllCourses(): Promise<IDegreeCourse[]> {
 // Finde Kurs anhand seiner ID
 // https://www.mongodb.com/docs/manual/reference/method/db.collection.findOne/
 export async function getCourseById(id: string) {
+    try {
     const course = await DegreeCourse.findOne({ _id: id });
     return course;
+    }
+    catch (error) {
+        console.error("Fehler beim Abrufen des Kurses:", error);
+        return null;
+    }
 }
 
 // Erstelle Kurs
