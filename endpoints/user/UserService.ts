@@ -11,15 +11,16 @@ export async function getAll(): Promise<IUser[]> {
 
 // Finde Benutzer anhand seiner ID
 // https://www.mongodb.com/docs/manual/reference/method/db.collection.findOne/
-export async function getPublicUserById(userID: string) {
+export async function getPublicUserById(userID: string): Promise<IUser | null> {
     const user = await User.findOne({ userID });
     return user;
 }
 
 // Erstelle Benutzer
-export async function createUser(userData: any) {
+export async function createUser(userData: any): Promise<IUser | null>  {
     if (!userData) {
         console.log("Keine Benutzerdaten vorhanden");
+        return null;
     }
     else {
         const hashedPassword = await bcrypt.hash(userData.password,10)
@@ -36,7 +37,7 @@ export async function createUser(userData: any) {
 }
 
 // Benutzer Aktualisieren
-export async function updatePublicUser(userID: string, updatedUser: any) {
+export async function updatePublicUser(userID: string, updatedUser: any): Promise<IUser | null> {
     // Prüft, ob ein neues Passwort übergeben wurde und hasht es, bevor es geändert wird
     if(updatedUser.password){
     updatedUser.password = await bcrypt.hash(updatedUser.password, 10)
@@ -60,13 +61,13 @@ export async function getAllUsers(): Promise<IUser[]> {
 
 // Finde Benutzer anhand seiner ID
 // https://mongoosejs.com/docs/api/query.html#Query.prototype.select()
-export async function getUserById(userID: string) {
+export async function getUserById(userID: string): Promise<IUser | null> {
     const user = await User.findOne({ userID }).select('-password');
     return user;
 }
 
 // Benutzer Aktualisieren - Muss noch überarbeitet werden
-export async function updateUser(userID: string, updatedUser: any, isAdmin: boolean) {
+export async function updateUser(userID: string, updatedUser: any, isAdmin: boolean): Promise<IUser | null> {
     // UserID ist unveränderbar
     if (updatedUser.userID) {
         delete updatedUser.userID;

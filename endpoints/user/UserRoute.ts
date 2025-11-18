@@ -1,11 +1,11 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import { authenticateJWT, authorizeAdmin } from "../../utils/authMiddleware";
 import { createUser, deleteUser, getAllUsers, getPublicUserById, getUserById, updateUser } from "./UserService";
 
 const router = express.Router();
 
 // Alle Benutzer abrufen
-router.get('/',authenticateJWT, authorizeAdmin, async (req: any, res: any) => {
+router.get('/',authenticateJWT, authorizeAdmin, async (req: Request, res: Response) => {
     try {
     const usersList = await getAllUsers();
     res.status(200).json(usersList);
@@ -37,7 +37,7 @@ router.get('/:userID', authenticateJWT, async (req: any, res: any) => {
 })
 
 // Benutzer anlegen
-router.post('/',authenticateJWT, authorizeAdmin, async (req: any, res: any) => {
+router.post('/',authenticateJWT, authorizeAdmin, async (req: Request, res: Response) => {
     try {
     // Was passiert, wenn ein User angelegt werden soll, der keine User-ID hat?
     const userID = req.body.userID
@@ -84,7 +84,7 @@ router.put('/:userID',authenticateJWT, async (req: any, res: any) => {
 })
 
 // Benutzer löschen
-router.delete('/:userID',authenticateJWT, authorizeAdmin, async (req: any, res: any) => {
+router.delete('/:userID',authenticateJWT, authorizeAdmin, async (req: Request, res: Response) => {
     try {
         const deleted = await deleteUser(req.params.userID)
         // Was passiert, wenn ein User gelöscht werden soll, den es nicht gibt?

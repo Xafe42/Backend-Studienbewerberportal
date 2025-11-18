@@ -1,6 +1,6 @@
 import * as bcrypt from 'bcryptjs';
 import * as jwt from 'jsonwebtoken';
-import { User } from '../user/UserModel';
+import { IUser, User } from '../user/UserModel';
 
 
 const SECRET_KEY = process.env.JWT_SECRET || 'geheimerSchlüssel';
@@ -27,7 +27,7 @@ public static async authenticate(userID: string, password: string) {
 // Erstelle einen Token
 // https://www.base64decode.org/
 // https://www.npmjs.com/package/jsonwebtoken
-public static createToken(user: any) {
+public static createToken(user: IUser) {
     // JWT Payload erstellen
         return jwt.sign(
         {
@@ -42,7 +42,7 @@ public static createToken(user: any) {
 }
 
 // Refresh Token erstellen
-public static createRefreshToken(user: any) {
+public static createRefreshToken(user: IUser) {
     return jwt.sign(
         {
             userID: user.userID,

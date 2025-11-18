@@ -1,10 +1,10 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import { createUser, deleteUser, getAll, getPublicUserById, updatePublicUser } from "./UserService";
 
 const router = express.Router();
 
 // Alle Benutzer abrufen
-router.get('/', async (req: any, res: any) => {
+router.get('/', async (req: Request, res: Response) => {
     try {
     const usersList = await getAll();
     res.status(200).json(usersList);
@@ -15,7 +15,7 @@ router.get('/', async (req: any, res: any) => {
 })
 
 // Bestimmten Benutzer über ID abrufen
-router.get('/:userID', async (req: any, res: any) => {
+router.get('/:userID', async (req: Request, res: Response) => {
     try {
     const user = await getPublicUserById(req.params.userID);
     if (user) {
@@ -30,7 +30,7 @@ router.get('/:userID', async (req: any, res: any) => {
 })
 
 // Benutzer anlegen
-router.post('/', async (req: any, res: any) => {
+router.post('/', async (req: Request, res: Response) => {
     try {
     // Was passiert, wenn ein User angelegt werden soll, der keine User-ID hat?
     const userID = req.body.userID
@@ -54,7 +54,7 @@ router.post('/', async (req: any, res: any) => {
 })
 
 // Benutzerdaten ändern
-router.put('/:userID', async (req: any, res: any) => {
+router.put('/:userID', async (req: Request, res: Response) => {
     try {
         const updatedUser = await updatePublicUser(req.params.userID, req.body);
         // Was passiert, wenn ein User geändert werden soll, den es nicht gibt?
@@ -69,7 +69,7 @@ router.put('/:userID', async (req: any, res: any) => {
 })
 
 // Benutzer löschen
-router.delete('/:userID', async (req: any, res: any) => {
+router.delete('/:userID', async (req: Request, res: Response) => {
     try {
         const deleted = await deleteUser(req.params.userID)
         // Was passiert, wenn ein User gelöscht werden soll, den es nicht gibt?

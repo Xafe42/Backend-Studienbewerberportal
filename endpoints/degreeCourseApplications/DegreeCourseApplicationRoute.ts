@@ -18,7 +18,6 @@ router.get('/myApplications', authenticateJWT, async (req: any, res: any) => {
     }
 });
 
-// Teilweise mit ChatGPT erstellt und angepasst 18.05.2025
 // GET: Bewerbungen filtern (Admin)
 router.get('/', authenticateJWT, authorizeAdmin, async (req: any, res: any) => {
     try {
@@ -57,7 +56,6 @@ router.get('/:applicationID', authenticateJWT, async (req: any, res: any) => {
     }
 });
 
-// Teilweise mit ChatGPT erstellt und angepasst 18.05.2025
 // POST: Neue Bewerbung anlegen (Eingeloggte Nutzer)
 router.post('/', authenticateJWT, async (req: any, res: any) => {
     try {

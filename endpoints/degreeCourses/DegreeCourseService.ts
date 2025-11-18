@@ -10,7 +10,7 @@ export async function getAllCourses(): Promise<IDegreeCourse[]> {
 
 // Finde Kurs anhand seiner ID
 // https://www.mongodb.com/docs/manual/reference/method/db.collection.findOne/
-export async function getCourseById(id: string) {
+export async function getCourseById(id: string): Promise<IDegreeCourse | null>  {
     try {
     const course = await DegreeCourse.findOne({ _id: id });
     return course;
@@ -22,9 +22,10 @@ export async function getCourseById(id: string) {
 }
 
 // Erstelle Kurs
-export async function createCourse(courseData: any) {
+export async function createCourse(courseData: IDegreeCourse): Promise<IDegreeCourse | null> {
     if (!courseData) {
         console.log("Keine Kursdaten vorhanden");
+        return null;
     }
     else {
         const course = new DegreeCourse({
@@ -47,7 +48,7 @@ export async function updateCourse(id: string, updateCourse: any) {
 }
 
 // Benutzer löschen
-export async function deleteCourse(id: string) {
+export async function deleteCourse(id: string): Promise<IDegreeCourse | null>  {
     console.log("Kurs wurde gelöscht");
     return DegreeCourse.findOneAndDelete({ _id: id });
 }

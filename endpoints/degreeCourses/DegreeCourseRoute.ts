@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import { authenticateJWT, authorizeAdmin } from "../../utils/authMiddleware";
 import { getApplicationsByDegreeCourse } from "../degreeCourseApplications/DegreeCourseApplicationService";
 import { DegreeCourse } from "./DegreeCourseModel";
@@ -8,7 +8,7 @@ const router = express.Router();
 
 
 // Alle Kurse abrufen oder nach bestimmten Studiengäng einer Hochschule filtern
-router.get('/', async (req: any, res: any) => {
+router.get('/', async (req: Request, res: Response) => {
     try {
     //Suche mit Query nach Studiengängen ansonsten geb alle Kurse zurück
     const universityShortName = req.query.universityShortName;
@@ -27,7 +27,7 @@ router.get('/', async (req: any, res: any) => {
 })
 
 // Bestimmten Kurs über ID abrufen
-router.get('/:courseID', async (req: any, res: any) => {
+router.get('/:courseID', async (req: Request, res: Response) => {
     try {
     const course = await getCourseById(req.params.courseID);
     if (course) {
@@ -43,7 +43,7 @@ router.get('/:courseID', async (req: any, res: any) => {
 
 // Meilenstein 3
 // GET: Nachgelagerte Suche für Studienbewerbungen
-router.get('/:degreeCourseID/degreeCourseApplications', authenticateJWT, authorizeAdmin, async (req: any, res: any) => {
+router.get('/:degreeCourseID/degreeCourseApplications', authenticateJWT, authorizeAdmin, async (req: Request, res: Response) => {
     try {
         const degreeCourseID = req.params.degreeCourseID;
         const degreeCourse = await getCourseById(degreeCourseID);
@@ -58,7 +58,7 @@ router.get('/:degreeCourseID/degreeCourseApplications', authenticateJWT, authori
 });
 
 // Kurs anlegen
-router.post('/',authenticateJWT, authorizeAdmin, async (req: any, res: any) => {
+router.post('/',authenticateJWT, authorizeAdmin, async (req: Request, res: Response) => {
     try {
     // Was passiert, wenn ein zweiter Kurs mit der gleichen ID angelegt wird?
     const existCourse = await DegreeCourse.findOne({ name: req.body.name, shortName: req.body.shortName });
@@ -77,7 +77,7 @@ router.post('/',authenticateJWT, authorizeAdmin, async (req: any, res: any) => {
 })
 
 // Kursdaten ändern
-router.put('/:courseID',authenticateJWT, authorizeAdmin, async (req: any, res: any) => {
+router.put('/:courseID',authenticateJWT, authorizeAdmin, async (req: Request, res: Response) => {
     try {
         const updatedCourse = await updateCourse(req.params.courseID, req.body);
         // Was passiert, wenn ein Kurs geändert werden soll, den es nicht gibt?
@@ -92,7 +92,7 @@ router.put('/:courseID',authenticateJWT, authorizeAdmin, async (req: any, res: a
 })
 
 // Kurs löschen
-router.delete('/:courseID',authenticateJWT, authorizeAdmin, async (req: any, res: any) => {
+router.delete('/:courseID',authenticateJWT, authorizeAdmin, async (req: Request, res: Response) => {
     try {
         const deleted = await deleteCourse(req.params.courseID)
         // Was passiert, wenn ein Kurs gelöscht werden soll, den es nicht gibt?
