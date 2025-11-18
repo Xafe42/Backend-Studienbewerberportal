@@ -1,4 +1,5 @@
 import express from 'express';
+import { isValidObjectId } from 'mongoose';
 import { authenticateJWT, authorizeAdmin } from '../../utils/authMiddleware';
 import { getCourseById } from '../degreeCourses/DegreeCourseService';
 import { createApplication, deleteApplication, getAllApplications, getApplicationById, getApplicationsByDegreeCourse, getApplicationsByUser, updateApplication } from './DegreeCourseApplicationService';
@@ -64,6 +65,11 @@ router.post('/', authenticateJWT, async (req: any, res: any) => {
         // Anpassen Anlegen einer Bewerbung für einen Studiengang, den es nicht gibt, Es sollte eine Fehlermeldung geben
         const { degreeCourseID, targetPeriodYear, targetPeriodShortName } = req.body;
 
+        // Prüft, ob die Studiengang-ID eine gültige MongoDB ObjectId ist
+        if (!isValidObjectId(degreeCourseID)) {
+        return res.status(400).json({ error:'Studiengang existiert nicht' });
+        }
+
         const degreeCourse = await getCourseById(degreeCourseID);
         if (!degreeCourse) {
             return res.status(400).json({ error: 'Studiengang existiert nicht' });
@@ -98,6 +104,7 @@ router.put('/:applicationID', authenticateJWT, async (req: any, res: any) => {
         const updated = await updateApplication(req.params.applicationID, req.body);
         res.status(200).json(updated);
     } catch (error) {
+        console.error("Fehler bei PUT /:applicationID:", error); // Löschen
         res.status(500).json({ error: 'Serverfehler' });
     }
 });
@@ -115,6 +122,7 @@ router.delete('/:applicationID', authenticateJWT, async (req: any, res: any) => 
         await deleteApplication(req.params.applicationID);
         res.status(204).send();
     } catch (error) {
+        console.error("Fehler bei DELETE /:applicationID:", error);
         res.status(500).json({ error: 'Serverfehler' });
     }
 });
