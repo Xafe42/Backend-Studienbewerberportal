@@ -1,5 +1,5 @@
 import express from "express";
-import { authenticateJWT, authorizeAdmin } from "../../middleware/authMiddleware";
+import { authenticateJWT, authorizeAdmin } from "../../utils/authMiddleware";
 import { createUser, deleteUser, getAllUsers, getPublicUserById, getUserById, updateUser } from "./UserService";
 
 const router = express.Router();

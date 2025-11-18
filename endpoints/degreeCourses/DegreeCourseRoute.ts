@@ -1,5 +1,5 @@
 import express from "express";
-import { authenticateJWT, authorizeAdmin } from "../../middleware/authMiddleware";
+import { authenticateJWT, authorizeAdmin } from "../../utils/authMiddleware";
 import { getApplicationsByDegreeCourse } from "../degreeCourseApplications/DegreeCourseApplicationService";
 import { DegreeCourse } from "./DegreeCourseModel";
 import { createCourse, deleteCourse, getAllCourses, getCourseById, updateCourse } from "./DegreeCourseService";

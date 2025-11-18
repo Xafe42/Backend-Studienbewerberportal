@@ -5,14 +5,14 @@ export interface IDegreeCourseApplication {
     _id: string;
     applicantUserID: string;
     degreeCourseID: string;
-    targetPeriodYear: string;
+    targetPeriodYear: Number;
     targetPeriodShortName: string,
 }
 
 const degreeCourseApplicationsSchema = new Schema<IDegreeCourseApplication>({
     applicantUserID: { type: String, required: true },
     degreeCourseID: { type: String, required: true },
-    targetPeriodYear: { type: String, required: true },
+    targetPeriodYear: { type: Number, required: true },
     targetPeriodShortName: { type: String, required: true },
 });
 
