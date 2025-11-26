@@ -51,7 +51,6 @@ router.post('/',authenticateJWT, authorizeAdmin, async (req: Request, res: Respo
     }
     
     // Erstellt den Benutzer
-    console.log('Erstelle Benutzer:' + JSON.stringify(req.body))
     const createdUser = await createUser(req.body);
     res.status(201).json(createdUser);
     }

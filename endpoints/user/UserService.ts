@@ -89,7 +89,7 @@ export async function createUser(userData: any): Promise<IUser | null>  {
 }
 
 
-// Benutzer Aktualisieren - Muss noch überarbeitet werden
+// Benutzer Aktualisieren
 export async function updateUser(userID: string, updatedUser: any, isAdmin: boolean): Promise<IUser | null> {
     // UserID ist unveränderbar
     if (updatedUser.userID) {
