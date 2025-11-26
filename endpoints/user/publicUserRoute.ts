@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { createUser, deleteUser, getAll, getPublicUserById, updatePublicUser } from "./UserService";
+import { createPublicUser, deleteUser, getAll, getPublicUserById, updatePublicUser } from "./UserService";
 
 const router = express.Router();
 
@@ -45,7 +45,7 @@ router.post('/', async (req: Request, res: Response) => {
     
     // Erstellt den Benutzer
     console.log('Erstelle Benutzer:' + JSON.stringify(req.body))
-    const createdUser = await createUser(req.body);
+    const createdUser = await createPublicUser(req.body);
     res.status(201).json(createdUser);
     }
     catch(error) {

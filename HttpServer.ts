@@ -20,7 +20,7 @@ const httpsPort = config.get('server.httpsPort');
 
 // CORS legt fest welche Domains, Methoden und Header beim Zugriff erlaubt sind
 // Dadurch kann später das Front-End drauf zugreifen
-// https://expressjs.com/en/resources/middleware/cors.html?utm_source=chatgpt.com
+// https://expressjs.com/en/resources/middleware/cors.html
 app.use(cors({
 origin:"*",
 allowedHeaders:["Origin","X-Requested-With","Content-Type","Accept","Authorization"],

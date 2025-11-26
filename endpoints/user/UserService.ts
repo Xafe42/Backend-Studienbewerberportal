@@ -16,8 +16,8 @@ export async function getPublicUserById(userID: string): Promise<IUser | null> {
     return user;
 }
 
-// Erstelle Benutzer
-export async function createUser(userData: any): Promise<IUser | null>  {
+// Erstelle Public Benutzer
+export async function createPublicUser(userData: any): Promise<IUser | null>  {
     if (!userData) {
         console.log("Keine Benutzerdaten vorhanden");
         return null;
@@ -65,6 +65,29 @@ export async function getUserById(userID: string): Promise<IUser | null> {
     const user = await User.findOne({ userID }).select('-password');
     return user;
 }
+
+// Erstelle Benutzer
+export async function createUser(userData: any): Promise<IUser | null>  {
+    if (!userData) {
+        console.log("Keine Benutzerdaten vorhanden");
+        return null;
+    }
+    else {
+        const hashedPassword = await bcrypt.hash(userData.password,10)
+        const user = new User({
+        userID: userData.userID,
+        password: hashedPassword,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        isAdministrator: userData.isAdministrator
+        });
+        await user.save();
+        const createdUser = user.toJSON();
+        delete (createdUser as any).password; // Passwort nicht zurückgeben
+        return createdUser;
+    }
+}
+
 
 // Benutzer Aktualisieren - Muss noch überarbeitet werden
 export async function updateUser(userID: string, updatedUser: any, isAdmin: boolean): Promise<IUser | null> {
