@@ -1,4 +1,3 @@
-Markdown
 # 🖥️ Backend-Studienbewerberportal (REST-API)
 
 ## 📝 Projektbeschreibung
